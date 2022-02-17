@@ -161,10 +161,18 @@ public class Breakout extends GraphicsProgram {
     private void reset(){
         ball.setLocation(getWidth()/2, 350);
         paddle.setLocation(230, 430);
-        waitForClick();
         if(lifecount <= 0){
             Dialog.showMessage("You are out of lives");
+            resetgame();
         }
+        waitForClick();
+
+
+    }
+    private void resetgame(){
+       removeAll();
+       score = 0;
+       lifecount = 3;
 
     }
 
