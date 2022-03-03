@@ -86,6 +86,36 @@ public class Breakout extends GraphicsProgram {
         }
     }
 
+    private void placeAll(){
+        numBricksInRow = (int) (getWidth() / (Brick.WIDTH + 5.0));
+
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < numBricksInRow; col++) {
+
+                double brickX = 10 + col * (Brick.WIDTH + 5);
+                double brickY = Brick.HEIGHT + row * (Brick.HEIGHT + 5);
+
+                Brick brick = new Brick(brickX, brickY, rowColors[row], row);
+                add(brick);
+            }
+        }
+
+        lives = new GLabel("Lives:3");
+        add(lives, getWidth()/2, getHeight()*0.925);
+        lifecount = 3;
+
+        ball = new Ball(getWidth()/2, 350, 10, this.getGCanvas());
+        add(ball);
+
+        paddle = new Paddle(230, 430, 50 ,10);
+        add(paddle);
+
+        score = 0;
+        scoreLabel = new GLabel("Score:" + score);
+        add(scoreLabel, getWidth()/3, getHeight()*0.925);
+
+    }
+
     private void handleCollisions(){
         // obj can store what we hit
         GObject obj = null;
@@ -131,13 +161,18 @@ public class Breakout extends GraphicsProgram {
             }
 
 
-            if(obj instanceof Brick){
+            if(obj instanceof Brick) {
                 // bounce the ball
                 ball.bounce();
                 // destroy the brick
-                this.remove(obj);
-                score += 1;
-                scoreLabel.setLabel("Score:" + score);
+                Brick brick = (Brick) obj;
+
+                brick.getHit();
+                if (brick.hitPoint == 0) {
+                    this.remove(obj);
+                    score += 1;
+                    scoreLabel.setLabel("Score:" + score);
+                }
             }
 
         }
@@ -171,6 +206,7 @@ public class Breakout extends GraphicsProgram {
     }
     private void resetgame(){
        removeAll();
+       placeAll();
        score = 0;
        lifecount = 3;
 
